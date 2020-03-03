@@ -1,6 +1,6 @@
 import numpy as np
 from abc import abstractmethod
-from activation import Sigmoid
+from activation import Sigmoid, Swish
 
 class Layers:
     @abstractmethod
@@ -24,15 +24,15 @@ class Dense(Layers):
 
     def backward(self, global_grad):
         #with respect to x
-        # return np.dot(global_grad , W.T) 
-        pass
+        return np.dot(global_grad, self.gradient())
 
     def gradient(self):
         return self.W.T
 
 class Activations(Layers):
     activations = {
-        "Sigmoid":Sigmoid
+        "Sigmoid":Sigmoid,
+        "Swish":Swish
     }
     def __init__(self, name):
         self._func = self.activations[name]()
@@ -43,3 +43,4 @@ class Activations(Layers):
 
     def backward(self, global_grad):
         return global_grad*self._func.gradient(self.inputs)
+        
